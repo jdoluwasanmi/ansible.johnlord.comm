@@ -1,1 +1,25 @@
 # ansible
+
+
+
+---
+- name: This sets up an httpd webserver
+  hosts: webhost
+  tasks:
+  - name: Install apache packages 
+    yum:
+      name: httpd
+      state: present
+  - name: ensure httpd is running
+    service:
+      name: httpd 
+      state: started
+  - name: Open port 80 for http access
+    firewalld:
+      service: http
+      permanent: true
+      state: enabled
+  - name: Restart the firewalld service to load in the firewall changes
+    service: 
+      name: firewalld 
+      state: restarted
