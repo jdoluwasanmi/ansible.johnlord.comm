@@ -23,3 +23,8 @@
     service: 
       name: firewalld 
       state: restarted
+
+
+vim /etc/ansible/hosts
+bitpost.johnlord.comm ansible_ssh_host=ans.johnlord.comm ansible_user=r
+oot
