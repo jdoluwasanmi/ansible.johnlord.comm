@@ -42,6 +42,10 @@ ansible-playbook main.yml --ask-pass
       
 ansible-playbook -u root --ask-pass -l bitpost.johnlord.comm main.yml
 
+UNREACHABLE! => {"changed": false, "msg": "Failed to connect to the host via ssh: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\r\n@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @\r\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\r\nIT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY! 
+solution: type this in your inventory
+[all:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no -o userknownhostsfile=/dev/null'
 
 yum install ansible -y
 ssh-keygen -b 4048
