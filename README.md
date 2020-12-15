@@ -58,3 +58,6 @@ ansible webservers -m ping
 ansible webservers -a "service httpd status"
 ansible webservers -a "systemctl status vsftpd"
 ansible webservers -a "cat /proc/cpuinfo"
+
+[webservers]
+apache.johnlord.comm ansible_ssh_user=root
