@@ -106,3 +106,86 @@ httpd ansible
     service:
       name: httpd
       state: started
+
+
+
+***ANSIBLE TOWER CONFIGURATION***
+RAM:4G
+HD: 32G
+systemctl disable firewalld; systemctl stop firewalld
+sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+
+
+Step 1: Change directories
+Change directories to /tmp
+
+cd /tmp
+
+Step 2: Download Red Hat Ansible Tower
+Download the latest Ansible Tower package
+
+curl -O https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-3.7.3-1.tar.gz
+
+Step 3: Untar and unzip the package file
+
+tar xvfz /tmp/ansible-tower-setup-3.7.3-1.tar.gz
+
+Step 4: Change directories
+Change directories into the Ansible Tower setup package
+
+cd /tmp/ansible-tower-setup-*/
+
+Step 5: Open inventory file
+Using an editor of your choice, open the inventory file
+
+vim inventory
+
+Step 6: Identify variables
+Fill a few variables out in an inventory file: admin_password, pg_password, rabbitmq_password
+
+[tower]
+localhost ansible_connection=local
+
+[database]
+
+[all:vars]
+admin_password='password'
+
+pg_host=''
+pg_port=''
+
+pg_database='awx'
+pg_username='awx'
+pg_password='password'
+pg_sslmode='prefer'  # set to 'verify-full' for client-side enforced SSL
+
+# Isolated Tower nodes automatically generate an RSA key for authentication;
+# To disable this behavior, set this value to false
+# isolated_key_generation=true
+
+
+# SSL-related variables
+
+# If set, this will install a custom CA certificate to the system trust store.
+# custom_ca_cert=/path/to/ca.crt
+
+# Certificate and key to install in nginx for the web UI and API
+# web_server_ssl_cert=/path/to/tower.cert
+# web_server_ssl_key=/path/to/tower.key
+
+# Server-side SSL settings for PostgreSQL (when we are installing it).
+# postgres_use_ssl=False
+# postgres_ssl_cert=/path/to/pgsql.crt
+# postgres_ssl_key=/path/to/pgsql.key
+Step 7: Run setup
+Run the Ansible Tower setup script
+
+sudo ./setup.sh
+
+Step 7 will take approx. 10-15 minutes to complete. This may be a good time to take a break.
+
+Step 8: Confirm results
+At this point, your Ansible Tower installation should be complete. You can access your Tower workshop (not forgetting that workshopname is the name of your workshop, and # is your student number) at:
+
+https://example.tower.0.rhnaps.io
+Ensuring Installation Success
