@@ -1,0 +1,18 @@
+---
+- name: Checking memory plugins
+  hosts: all
+  tasks:
+  - name: Install related packages
+    yum:
+      name: wget
+  - name: Copy Shell Script
+    copy: src=mem.sh dest=/usr/lib64/nagios/plugins mode=0777
+
+  - name: Execute mem.sh script
+    command: sh /usr/lib64/nagios/plugins/mem.sh
+#  - name: check memory plugins install
+#    command: cd /usr/lib64/nagios/plugins/ 
+#    command: wget https://raw.githubusercontent.com/justintime/nagios-plugins/master/check_mem/check_mem.pl
+#    command: mv check_mem.pl check_mem
+#    command: chmod +x check_mem
+  

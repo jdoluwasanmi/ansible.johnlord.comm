@@ -1,0 +1,11 @@
+---
+- name: Setup Firewall rules
+  hosts: all
+  tasks:
+  - name: Set up http firewall rules
+    firewalld:
+      port: 5666/tcp
+      permanent: true
+      state: enabled
+  - name: reload firewalld
+    command: firewall-cmd --reload

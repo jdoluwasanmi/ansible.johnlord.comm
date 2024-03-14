@@ -1,0 +1,27 @@
+---
+- name: Removing and reinstalling nrpe
+  hosts: all
+  become: true
+  tasks:
+    - name: removing nrpe
+      yum:
+        name: nrpe*
+        state: absent
+        update_cache: yes
+    - name: install nrpe
+      yum:
+        name: nrpe*,nagios-plugins-all
+        state: latest
+        update_cache: yes
+    - name: enable service
+      systemd:
+        name: nrpe
+        state: started
+        enabled: yes
+    - name: Set up http firewall rules
+      firewalld:
+        port: 5666/tcp
+        permanent: true
+        state: enabled
+    - name: reload firewalld
+      command: firewall-cmd --reload

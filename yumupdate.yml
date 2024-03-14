@@ -1,0 +1,22 @@
+---
+- name: update the system
+  hosts: all
+  tasks:
+  - name: Install the packages
+    yum:
+      name: 'epel-release, vim, wget, unzip, java-11-openjdk-devel'
+      state: present
+      update_cache: true
+    tags: packages
+  - name: update the system
+    yum:
+      name: "*"
+      state: latest
+  - name: Restart after patching
+    raw: shutdown -r now
+    ignore_unreachable: true
+    ignore_errors: true
+  - name: Wait for system to become reachable again
+    wait_for_connection:
+      delay: 60
+      timeout: 300

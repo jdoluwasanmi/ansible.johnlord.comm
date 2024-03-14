@@ -1,0 +1,14 @@
+---
+- name: Install ldap client
+  hosts: all
+  tasks:
+  - name: Installing ldap client packages
+    yum:
+      name: '{{ item }}'
+      state: present
+      update_cache: true
+    with_items:
+      authconfig, authconfig-gtk, openldap-clients, sssd, oddjob-mkhomedir.x86_64, nss-pam-ldapd
+  - name: Disable selinux package
+    selinux:
+      state: disabled

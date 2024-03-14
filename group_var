@@ -1,0 +1,11 @@
+[dev]
+nexus.johnlord.comm
+jenkins.johnlord.comm
+
+[staging]
+git.johnlord.comm
+jenkins.johnlord.comm
+
+[production]
+nexus.johnlord.comm
+tomcat.johnlord.comm

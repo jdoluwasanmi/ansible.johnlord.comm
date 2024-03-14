@@ -1,0 +1,11 @@
+---
+- name: Execute Shell Command
+  hosts: all
+  tasks:
+    - name: Run shell command
+      shell: echo "host_support_level: full-baseline" > /var/lib/jenkins/secret.key
+      register: output
+
+    - name: Display output
+      debug:
+        var: output.stdout

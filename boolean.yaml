@@ -1,0 +1,10 @@
+---
+- name: trying boolean conditions
+  hosts: all
+  tasks:
+  - name: Let us update box when OS is Debian
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+      upgrade: dist
+    when: ansible_distribution == "Debian"

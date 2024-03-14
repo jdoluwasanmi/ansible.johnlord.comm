@@ -1,0 +1,16 @@
+---
+- name: deploying nrpe.cfg
+  hosts: all
+  tasks:
+  - name: deploy nrpe.cfg
+    copy:
+      src: nrpe.cfg
+      dest: /etc/nagios/nrpe.cfg
+    register: deploy_nrpe
+
+  - name: start/restart and enable nrpe
+    systemd:
+      name: nrpe
+      state: restarted
+      enabled: yes
+    when: deploy_nrpe.changed

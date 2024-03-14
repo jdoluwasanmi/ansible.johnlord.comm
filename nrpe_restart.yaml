@@ -1,0 +1,9 @@
+---
+- name: restart nrpe
+  hosts: all
+  become: yes
+  tasks:
+    - name: restarting nrpe
+      service:
+        name: nrpe
+        state: restarted

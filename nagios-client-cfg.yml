@@ -1,0 +1,20 @@
+---
+- name: Copy Client services to Nagios
+  hosts: all
+  tasks:
+  - name: creating an empty file
+    file:
+      path: "/usr/local/nagios/etc/objects/apache.johnlord.comm.cfg"
+      state: touch
+
+  - name: deploy client services to Nagios cfg
+    copy:
+      src: nagios-client-cfg
+      dest: /usr/local/nagios/etc/objects/apache.johnlord.comm.cfg
+    register: deploy_nrpe
+
+  - name: restart nagios
+    systemd:
+      name: nagios
+      state: restarted
+      enabled: yes

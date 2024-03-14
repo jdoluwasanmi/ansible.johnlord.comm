@@ -1,0 +1,9 @@
+---
+- name: deploy test
+  hosts: all
+  tasks:
+  - name: deploy nrpe.cfg
+    copy:
+      src: nrpe.cfg
+      dest: /etc/nrpe.d/nrpe-test.cfg
+    register: deploy_nrpe

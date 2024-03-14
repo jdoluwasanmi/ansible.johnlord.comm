@@ -1,0 +1,10 @@
+---
+- name: Install packages
+  hosts: all
+  tasks:
+  - name: Install the packages
+    yum:
+      name: (item=[u'epel-release, vim, wget, unzip'])
+      state: present
+      update_cache: true
+      

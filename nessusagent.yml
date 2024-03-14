@@ -1,0 +1,8 @@
+---
+- name: Installing Nessus Agent
+  host: all
+  tasks:
+  - name: Nessus install
+    ansible.builtin.yum:
+      name: nessusagent
+      state: latest

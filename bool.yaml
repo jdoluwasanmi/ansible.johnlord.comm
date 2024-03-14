@@ -1,0 +1,17 @@
+---
+- name: Update the system
+  hosts: all
+  become: yes
+  var:
+  host_support_level: web
+  
+  playbook variable:
+  playbook_support_levels:
+  - web
+
+  tasks:
+  - name: checking when
+    yum:
+      name: install ftp
+      state: latest
+      update_cache: yes

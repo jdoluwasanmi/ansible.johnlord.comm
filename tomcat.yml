@@ -1,0 +1,19 @@
+---
+- name: bitpost packages
+  hosts: bitpost.johnlord.comm
+  tasks:
+  - name: Update VM
+    yum:
+      name: "*"
+      state: latest
+
+  - name: installing extra tomcat packages
+    yum:
+      name: epel-release, vim, wget
+      state: latest
+      update_cache: yes
+
+  - name: Restart VM
+    raw: shutdown -r now
+    ignore_unreachable: true
+    ignore_errors: true    

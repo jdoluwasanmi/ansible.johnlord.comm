@@ -1,0 +1,4 @@
+items
+host_support_level: full-baseline
+items 3.yaml host1.yaml
+host_support_level: full-baseline

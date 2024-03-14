@@ -1,0 +1,10 @@
+---
+- name: serverling
+  hosts: all
+  become: true
+  tasks:
+  - name: htpd install
+    yum:
+      name: httpd
+      state: present
+      update_cache: true

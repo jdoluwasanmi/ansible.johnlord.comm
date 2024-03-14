@@ -1,0 +1,23 @@
+---
+
+- hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: check if a service is running
+      shell: systemctl is-active named
+      register: service_status
+    - name: End playbook execution if service is running
+      meta: end_host
+      when: service_status.stdout == "active"
+
+    - name: check resolv.conf exists
+      stat:
+        path: /etc/resolv.conf
+      register: resolv_conf
+    - name: check nameservers list in resolv.conf
+      debug:
+        msg: "{{ contents }}"
+      vars:
+        contents: "{{ lookup('file', '/etc/resolv.conf') | regex_findall('\\s*nameserver\\s*(.*)') }}"
+      when: resolv_conf.stat.exists == True

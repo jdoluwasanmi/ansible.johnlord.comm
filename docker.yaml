@@ -1,0 +1,14 @@
+---
+- name: docker purposes
+  hosts: all
+  tasks:
+  - name: Install docker
+    yum:
+      name: docker
+      state: present
+  
+  - name: start docker
+    service:
+      name: docker
+      state: started
+      enabled: yes
