@@ -1,6 +1,6 @@
 ---
 - name: mlocate install
-  hosts: dns.johnlord.comm
+  hosts: all
   become: true
   tasks:
     - name: install mlocate
