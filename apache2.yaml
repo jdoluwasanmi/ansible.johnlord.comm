@@ -1,0 +1,9 @@
+---
+- name: Install httpd
+  hosts: all
+  tasks:
+  - name: installing
+    apt:
+    - name: apache2
+      state: current
+      update_cache: true
