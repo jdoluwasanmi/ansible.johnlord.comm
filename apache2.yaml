@@ -5,5 +5,5 @@
   - name: installing
     apt:
       name: apache2
-      state: current
+      state: latest
       update_cache: true
