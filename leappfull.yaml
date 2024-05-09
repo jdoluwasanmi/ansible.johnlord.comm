@@ -1,4 +1,7 @@
 ---
+# For manual installation, click here:
+# https://hq.apiscp.com/updating-centos-7-in-place-with-leapp/
+
 - name: Upgrade to AlmaLinux/Rocky Linux using Leapp
   hosts: all
   become: true
