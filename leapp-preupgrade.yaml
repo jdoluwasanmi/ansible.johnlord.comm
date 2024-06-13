@@ -1,0 +1,25 @@
+---
+- name: leapp upgradation
+  hosts: all
+  become: true
+  tasks:
+  - name: Download Leapp
+    yum:
+      name: "http://repo.almalinux.org/elevate/elevate-release-latest-el7.noarch.rpm"
+      state: present
+
+  - name: Install leapp-upgrade and leapp-data-almalinux
+    yum:
+      name: 'leapp-upgrade, leapp-data-almalinux'
+      state: latest
+      update_cache: true
+
+  - name: leapp preupgrade
+    command: leapp preupgrade
+    register: preupgrade_result
+    ignore_errors: true
+
+  - name: Check if pre-upgrade checks failed
+    fail:
+      msg: "Pre-upgrade checks failed. Please resolve the issues before proceeding."
+    when: preupgrade_result.rc != 0

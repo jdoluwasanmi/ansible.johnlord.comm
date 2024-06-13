@@ -1,0 +1,23 @@
+---
+- name: Clean up orphan packages
+  hosts: all
+  become: true
+  tasks:
+  - name: Cleanup any orphan packages from RHEL7
+    command: rpm -qa | grep -E 'el7[.-]' | xargs rpm -e
+
+  - name: Update the packages
+    dnf:
+      name: '*'
+      state: latest
+      update_cache: true
+
+  - name: Reboot the system
+    raw: shutdown -r now
+    async: 0
+    poll: 0
+
+  - name: Wait for connection
+    wait_for_connection:
+      delay: 60
+      timeout: 300
