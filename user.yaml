@@ -1,0 +1,33 @@
+- name: Setup sysadm user account
+  hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+  - name: create sysadm user
+    user:
+      name: sysadm
+      comment: 'sysadm account'
+      home: /home/sysadm
+      uid: 5000
+      password: '$6$Om6PyeJF$rg3F8dUy8jTR3VRelW.zo8LJ.31qXnoNPqPAF2QDXB0aC0Bmz.IBz9WxARNuIAeDjeRckjq1rPJPgz5KIsXYi.:19898:0:99999:7:::'
+      shell: /bin/bash
+      createhome: true
+      append: true
+
+  - name: Add SSH authorized keys for sysadm
+    community.general.authorized_key:
+      user: sysadm
+      state: present
+      key: "{{ item }}"
+    with_items:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICXdALwxKv4SA9ETK1lEe4U7bHUJrVNjMxXQx9b0z30c sysadm@ans.johnlord.comm
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCv+OWaoyC9NkDdI31aITj79FkYJ0cm5zdEbmtEzHdu/NeAbt99FvGv6rV5ilY+o/uLQ134Wfg+masd9uMowZLrWWZ8dhz5jDNljowFvBs5UH49S0qcNAUPuAM+tv+EwW1rBGIatwGe91DT6OTlL0lk6F6vrpZodjOpCDj2H1mA7HVhbMRJJIjlx0RqIdUl/hVJwZUF6V+dNr5oIlibbAQCKc/kqxDA/m0uvhvHzpBpDQnvaX2nNbiRi71fWSVUFFg4ptwlhsMS+3r62ZqWc5wqqugQJc9HaEbnAoEN/jKXhlGKE5gY4uOvnviPuPWyq2a1WD+ZG7R7631cpobnYRIL sysadm@ans.johnlord.comm
+
+  - name: Deploy sysadm sudoers configuration
+    template:
+      src: sysadm_sudoers.j2
+      dest: /etc/sudoers.d/sysadm
+      owner: root
+      group: root
+      mode: 0440
+    validate: 'visudo -cf %s'

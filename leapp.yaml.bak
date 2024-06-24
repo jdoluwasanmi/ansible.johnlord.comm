@@ -1,0 +1,26 @@
+---
+- name: leapp upgradation
+  hosts: all
+  become: true
+  tasks:
+  - name: leapp preupgrade
+    command: leapp preupgrade
+    register: preupgrade_result
+    ignore_errors: true
+  - name: Check if pre-upgrade checks failed
+    fail:
+      msg: "Pre-upgrade checks failed. Please resolve the issues before proceeding."
+    when: preupgrade_result.rc != 0
+
+  - name: leapp upgrade
+    command: leapp upgrade
+    register: upgrade_results
+    ignore_errors: true
+
+  - name: Check if upgrade failed
+    fail:
+      msg: "Upgrade process failed. Please investigate and resolve the issue."
+    when: upgrade_result.rc != 0
+
+  - name: reboot the system
+    command: reboot

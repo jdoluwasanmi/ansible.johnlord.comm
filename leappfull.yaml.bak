@@ -1,0 +1,96 @@
+---
+# For manual installation, click here:
+# https://hq.apiscp.com/updating-centos-7-in-place-with-leapp/
+
+- name: Upgrade to AlmaLinux/Rocky Linux using Leapp
+  hosts: all
+  become: true
+  tasks:
+    - name: Download Leapp
+      yum:
+        name: "http://repo.almalinux.org/elevate/elevate-release-latest-el7.noarch.rpm"
+        state: present
+
+    - name: Install leapp-upgrade and leapp-data-almalinux
+      yum:
+        name: 'leapp-upgrade, leapp-data-almalinux'
+        state: latest
+        update_cache: true
+
+    - name: Perform pre-upgrade check
+      command: leapp preupgrade
+      register: preupgrade_result
+      ignore_errors: true
+
+    - name: Update remove_pam_pkcs11_module_check confirm value
+      ansible.builtin.lineinfile:
+        path: /var/log/leapp/answerfile
+        regexp: '^confirm ='
+        line: 'confirm = true'
+        insertafter: '^# confirm ='
+
+    - name: Acknowledge removal of pam_pkcs11
+      command: leapp answer --section remove_pam_pkcs11_module_check.confirm=True
+
+    # Add tasks to address issues encountered during pre-upgrade check
+    # - name: Address ModelViolationError
+    #   command: "yum list | grep 'missing name'"
+    #   # Add task to remove invalid sections from yum repositories
+
+    # - name: Address Inhibitor error
+    #   command: "upcp -sb --var=always_update_kernel=True --var=prefer_experimental_kernel=False system/kernel"
+    #   # Add task to update system kernel and reboot
+
+    # - name: Address RPM transaction errors
+    #   command: "rpm -e mod_ssl httpd"
+    #   # Add task to remove conflicting RPMs
+
+    - name: Upgrade system
+      command: leapp upgrade
+
+    - name: Reboot after upgrade
+      raw: shutdown -r now
+      ignore_unreachable: true
+      ignore_errors: true
+      
+    - name: Wait for system to become reachable again
+      wait_for_connection:
+        delay: 240
+        timeout: 1200
+
+    - name: Cleanup any orphan packages from RHEL7
+      command: rpm -qa | grep -E 'el7[.-]' | xargs rpm -e
+
+    - name: Reinstall Ansible and JSON parser
+      yum:
+        name:
+          - ansible
+          - python3-jmespath
+        state: present
+        update_cache: true
+
+    - name: Remove Apache RPMs from AppStream
+      shell: rpm -e mod_http2 httpd mod_ssl --nodeps
+      when:
+        - ansible_facts.packages['httpd'] is defined
+
+    - name: Scrub the old packages
+      shell: upcp -sbf
+      when:
+        - ansible_facts.packages['upcp'] is defined
+
+    - name: Update the packages
+      dnf:
+        name: '*'
+        state: latest
+        update_cache: true
+
+    - name: Reboot after upgrade
+      raw: shutdown -r now
+      ignore_unreachable: true
+      ignore_errors: true
+
+    - name: Wait for system to become reachable again
+      wait_for_connection:
+        delay: 60
+        timeout: 300

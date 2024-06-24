@@ -8,10 +8,30 @@
       state: present
       update_cache: true
     tags: packages
+
+  - name: Download MySQL GPG Key
+    become: yes
+    get_url:
+      url: https://dev.mysql.com/downloads/file/?id=527911
+      dest: /tmp/RPM-GPG-KEY-mysql
+
+  - name: Import MySQL GPG Key
+    become: yes
+    rpm_key:
+      state: present
+      key: /tmp/RPM-GPG-KEY-mysql
+
+  #- name: Import GPG Keys if missing
+  #  yum:
+  #    name: https://dev.mysql.com/downloads/file/?id=527911
+  #    state: present
+  #    update_cache: true
+
   - name: update the system
     yum:
       name: "*"
       state: latest
+
   - name: Restart after patching
     raw: shutdown -r now
     ignore_unreachable: true

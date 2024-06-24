@@ -1,0 +1,37 @@
+---
+- name: Perform Cleanup and Scrub Tasks
+  hosts: all
+  become: true
+  tasks:
+    - name: Cleanup any orphan packages from RHEL7
+      command: rpm -qa | grep -E 'el7[.-]' | xargs rpm -e
+
+    - name: Reinstall Ansible and JSON parser
+      yum:
+        name:
+          - ansible
+          - python3-jmespath
+        state: present
+        update_cache: true
+
+    - name: Remove Apache RPMs from AppStream
+      shell: rpm -e mod_http2 httpd mod_ssl --nodeps
+      when:
+        - ansible_facts.packages['httpd'] is defined
+
+    - name: Scrub the old packages
+      shell: upcp -sbf
+      when:
+        - ansible_facts.packages['upcp'] is defined
+
+    - name: Update the packages
+      dnf:
+        name: '*'
+        state: latest
+        update_cache: true
+
+    - name: Update filesystem packages
+      shell: /usr/local/apnscp/bin/scripts/yum-post.php resync --force
+
+    - name: Rebuild site configuration
+      shell: EditDomain --reconfig --all
