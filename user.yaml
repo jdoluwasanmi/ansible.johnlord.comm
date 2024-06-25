@@ -30,4 +30,5 @@
       owner: root
       group: root
       mode: 0440
-
+# Note - to create a hash password - use this code
+# python -c 'import crypt; print(crypt.crypt("<user-password>", crypt.mksalt(crypt.METHOD_SHA512)))'
