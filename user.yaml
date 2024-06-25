@@ -9,13 +9,13 @@
       comment: 'sysadm account'
       home: /home/sysadm
       uid: 5000
-      password: '$6$Om6PyeJF$rg3F8dUy8jTR3VRelW.zo8LJ.31qXnoNPqPAF2QDXB0aC0Bmz.IBz9WxARNuIAeDjeRckjq1rPJPgz5KIsXYi.:19898:0:99999:7:::'
+      password: '$6$0M5LmPSTFlivC7RN$304i5zMO/F.pO.opEDiwhkV76cwdVv8BYXLceSI0rELS/vYJkMSfslP7c8PRQokiKyyMqSQvh76QOjE.Id7Mq.'
       shell: /bin/bash
       createhome: true
       append: true
 
   - name: Add SSH authorized keys for sysadm
-    community.general.authorized_key:
+    ansible.posix.authorized_key:
       user: sysadm
       state: present
       key: "{{ item }}"
@@ -30,4 +30,4 @@
       owner: root
       group: root
       mode: 0440
-    validate: 'visudo -cf %s'
+
